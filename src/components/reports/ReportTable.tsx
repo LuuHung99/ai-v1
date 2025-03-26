@@ -1,17 +1,8 @@
 import React from "react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { Download, Filter } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { DataTable } from "../ui/data-table";
+import { TableCell } from "../ui/table";
 
 interface ReportData {
   id: string;
@@ -93,78 +84,86 @@ const ReportTable = ({
   const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
   const totalProfit = data.reduce((sum, item) => sum + item.profit, 0);
 
+  const columns = [
+    {
+      key: "date",
+      header: "Date",
+    },
+    {
+      key: "product",
+      header: "Product",
+      cell: (item: ReportData) => (
+        <span className="font-medium text-foreground">{item.product}</span>
+      ),
+    },
+    {
+      key: "category",
+      header: "Category",
+    },
+    {
+      key: "quantity",
+      header: "Quantity",
+      className: "text-right",
+    },
+    {
+      key: "revenue",
+      header: "Revenue",
+      cell: (item: ReportData) => (
+        <span className="text-right">${item.revenue.toFixed(2)}</span>
+      ),
+    },
+    {
+      key: "profit",
+      header: "Profit",
+      cell: (item: ReportData) => (
+        <span className="text-right">${item.profit.toFixed(2)}</span>
+      ),
+    },
+  ];
+
+  const footerContent = (
+    <>
+      <TableCell colSpan={3} className="text-right font-medium text-foreground">
+        Total
+      </TableCell>
+      <TableCell className="text-right font-medium text-foreground">
+        {totalQuantity}
+      </TableCell>
+      <TableCell className="text-right font-medium text-foreground">
+        ${totalRevenue.toFixed(2)}
+      </TableCell>
+      <TableCell className="text-right font-medium text-foreground">
+        ${totalProfit.toFixed(2)}
+      </TableCell>
+    </>
+  );
+
   return (
-    <Card className="w-full bg-white shadow-sm">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <div>
-          <CardTitle className="text-xl font-bold">{title}</CardTitle>
-          {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
-          )}
-        </div>
-        <div className="flex space-x-2">
-          {showFilters && (
-            <Button variant="outline" size="sm" onClick={onFilter}>
-              <Filter className="mr-2 h-4 w-4" />
-              Filters
-            </Button>
-          )}
-          {showDownload && (
-            <Button variant="outline" size="sm" onClick={onDownload}>
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="rounded-md border">
-          <Table>
-            <TableCaption>
-              Report generated on {new Date().toLocaleDateString()}
-            </TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead className="text-right">Quantity</TableHead>
-                <TableHead className="text-right">Revenue</TableHead>
-                <TableHead className="text-right">Profit</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell>{item.date}</TableCell>
-                  <TableCell className="font-medium">{item.product}</TableCell>
-                  <TableCell>{item.category}</TableCell>
-                  <TableCell className="text-right">{item.quantity}</TableCell>
-                  <TableCell className="text-right">
-                    ${item.revenue.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    ${item.profit.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              ))}
-              <TableRow className={cn("font-medium bg-muted/50")}>
-                <TableCell colSpan={3} className="text-right">
-                  Total
-                </TableCell>
-                <TableCell className="text-right">{totalQuantity}</TableCell>
-                <TableCell className="text-right">
-                  ${totalRevenue.toFixed(2)}
-                </TableCell>
-                <TableCell className="text-right">
-                  ${totalProfit.toFixed(2)}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <div className="flex justify-end space-x-2">
+        {showFilters && (
+          <Button variant="outline" size="sm" onClick={onFilter}>
+            <Filter className="mr-2 h-4 w-4" />
+            Filters
+          </Button>
+        )}
+        {showDownload && (
+          <Button variant="outline" size="sm" onClick={onDownload}>
+            <Download className="mr-2 h-4 w-4" />
+            Export
+          </Button>
+        )}
+      </div>
+      <DataTable
+        data={data}
+        columns={columns}
+        title={title}
+        description={description}
+        showFooter={true}
+        footerContent={footerContent}
+        emptyMessage="No report data found"
+      />
+    </div>
   );
 };
 

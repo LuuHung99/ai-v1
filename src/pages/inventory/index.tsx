@@ -53,7 +53,7 @@ const InventoryPage = () => {
   return (
     <DashboardLayout>
       <Helmet>
-        <title>Inventory Management | Bubble Tea Shop</title>
+        <title>Inventory Management | Base</title>
       </Helmet>
 
       <div className="flex flex-col gap-6">
@@ -72,10 +72,18 @@ const InventoryPage = () => {
                       <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
                     </div>
                     <div
-                      className={`p-2 rounded-full ${stat.changeType === "positive" ? "bg-green-100" : "bg-red-100"}`}
+                      className={`p-2 rounded-full ${
+                        stat.changeType === "positive"
+                          ? "bg-green-100"
+                          : "bg-red-100"
+                      }`}
                     >
                       <Icon
-                        className={`h-5 w-5 ${stat.changeType === "positive" ? "text-green-600" : "text-red-600"}`}
+                        className={`h-5 w-5 ${
+                          stat.changeType === "positive"
+                            ? "text-green-600"
+                            : "text-red-600"
+                        }`}
                       />
                     </div>
                   </div>
@@ -83,7 +91,11 @@ const InventoryPage = () => {
                     {stat.description}
                   </p>
                   <p
-                    className={`text-xs font-medium mt-1 ${stat.changeType === "positive" ? "text-green-600" : "text-red-600"}`}
+                    className={`text-xs font-medium mt-1 ${
+                      stat.changeType === "positive"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
                   >
                     {stat.change}
                   </p>

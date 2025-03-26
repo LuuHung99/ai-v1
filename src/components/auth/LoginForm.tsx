@@ -15,9 +15,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import api from "@/lib/api";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  username: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
@@ -28,36 +31,54 @@ interface LoginFormProps {
   error?: string;
 }
 
+export interface UserInfo {
+  username: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  fullname: string;
+  role: string;
+  id: string;
+}
+
+interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface AuthResponse extends AuthTokens {
+  info: UserInfo;
+}
+
 const LoginForm = ({ onSuccess = () => {}, error = "" }: LoginFormProps) => {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [loginError, setLoginError] = useState(error);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
+    mode: "onChange",
   });
 
   const handleSubmit = async (values: LoginFormValues) => {
     try {
-      setLoginError("");
-      // Mock authentication - in a real app, this would call an auth service
-      console.log("Login attempt with:", values);
-
-      // Simulate role-based redirection
-      if (values.email.includes("manager")) {
-        navigate("/dashboard/manager");
-      } else {
-        navigate("/dashboard/staff");
-      }
-
+      setIsLoading(true);
+      const response = await api.post<AuthResponse>("/auth/login", values);
+      localStorage.setItem("token", response.data.accessToken);
+      setUser(response.data.info);
+      navigate("/");
+      toast.success("Login successful");
       onSuccess();
-    } catch (error) {
-      setLoginError("Invalid email or password. Please try again.");
+    } catch (error: any) {
       console.error("Login error:", error);
+      toast.error("Invalid username or password. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -66,31 +87,28 @@ const LoginForm = ({ onSuccess = () => {}, error = "" }: LoginFormProps) => {
   };
 
   return (
-    <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
+    <div className="w-full max-w-md p-8 space-y-8 bg-card rounded-lg shadow-lg">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-900">Bubble Tea Shop</h2>
-        <p className="mt-2 text-gray-600">Sign in to your account</p>
+        <h2 className="text-3xl font-bold text-foreground">Base</h2>
+        <p className="mt-2 text-muted-foreground">Sign in to your account</p>
       </div>
-
-      {loginError && (
-        <div className="p-3 text-sm text-white bg-red-500 rounded-md">
-          {loginError}
-        </div>
-      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
           <FormField
             control={form.control}
-            name="email"
+            name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>
+                  Username <i className={"text-red-700"}>*</i>
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="you@example.com"
                     type="email"
                     {...field}
+                    disabled={isLoading}
                   />
                 </FormControl>
                 <FormMessage />
@@ -103,19 +121,22 @@ const LoginForm = ({ onSuccess = () => {}, error = "" }: LoginFormProps) => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>
+                  Password <i className={"text-red-700"}>*</i>
+                </FormLabel>
                 <div className="relative">
                   <FormControl>
                     <Input
                       placeholder="••••••••"
                       type={showPassword ? "text" : "password"}
                       {...field}
+                      disabled={isLoading}
                     />
                   </FormControl>
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -135,11 +156,12 @@ const LoginForm = ({ onSuccess = () => {}, error = "" }: LoginFormProps) => {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                className="h-4 w-4 rounded border-input text-primary focus:ring-primary"
+                disabled={isLoading}
               />
               <label
                 htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-600"
+                className="ml-2 block text-sm text-muted-foreground"
               >
                 Remember me
               </label>
@@ -157,14 +179,15 @@ const LoginForm = ({ onSuccess = () => {}, error = "" }: LoginFormProps) => {
           <Button
             type="submit"
             className="w-full flex items-center justify-center gap-2"
+            disabled={isLoading}
           >
             <LogIn className="h-4 w-4" />
-            Sign in
+            {isLoading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
       </Form>
 
-      <div className="mt-4 text-center text-sm text-gray-600">
+      <div className="mt-4 text-center text-sm text-muted-foreground">
         <p>Hint: Use 'manager@example.com' to log in as manager</p>
       </div>
     </div>

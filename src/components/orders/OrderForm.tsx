@@ -168,10 +168,7 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
                   </div>
                 )}
 
-                <CustomizationPanel
-                  customization={customization}
-                  onChange={handleCustomizationChange}
-                />
+                <CustomizationPanel />
 
                 <div className="flex justify-end mt-6">
                   <Button onClick={handleAddToOrder} className="gap-2">
@@ -248,10 +245,7 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
       </div>
 
       <div className="w-full lg:w-80 xl:w-96 flex-shrink-0">
-        <OrderSummary
-          items={orderItems}
-          onCheckout={() => setCurrentStep("checkout")}
-        />
+        <OrderSummary onCheckout={() => setCurrentStep("checkout")} />
       </div>
     </div>
   );

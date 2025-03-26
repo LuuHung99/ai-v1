@@ -5,7 +5,7 @@ import LoginForm from "./auth/LoginForm";
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Helmet>
         <title>Bubble Tea Management System | Login</title>
         <meta

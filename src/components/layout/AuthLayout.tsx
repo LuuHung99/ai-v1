@@ -57,9 +57,7 @@ const AuthLayout = ({
       >
         <div className="flex h-full items-center justify-center bg-black/40 p-12">
           <div className="max-w-md text-white">
-            <h2 className="mb-4 text-3xl font-bold">
-              Manage Your Bubble Tea Shop
-            </h2>
+            <h2 className="mb-4 text-3xl font-bold">Manage Your Base</h2>
             <p className="text-lg">
               A comprehensive system for inventory management, order processing,
               and business analytics.

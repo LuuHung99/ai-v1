@@ -1,12 +1,4 @@
 import React, { useState } from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableHead,
-  TableRow,
-  TableCell,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -15,13 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,6 +27,7 @@ import {
   Filter,
   ChevronDown,
 } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
 
 interface Employee {
   id: string;
@@ -109,7 +95,7 @@ const EmployeeTable = ({
 }: EmployeeTableProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
-    null,
+    null
   );
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -117,7 +103,7 @@ const EmployeeTable = ({
     (employee) =>
       employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      employee.role.toLowerCase().includes(searchTerm.toLowerCase()),
+      employee.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (employee: Employee) => {
@@ -146,13 +132,97 @@ const EmployeeTable = ({
     }).format(date);
   };
 
+  const columns = [
+    {
+      key: "name",
+      header: "Employee",
+      cell: (employee: Employee) => (
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+            {employee.avatar ? (
+              <img
+                src={employee.avatar}
+                alt={employee.name}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="text-muted-foreground font-medium">
+                {employee.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </div>
+            )}
+          </div>
+          <div className="font-medium text-foreground">{employee.name}</div>
+        </div>
+      ),
+    },
+    {
+      key: "email",
+      header: "Email",
+    },
+    {
+      key: "role",
+      header: "Role",
+    },
+    {
+      key: "status",
+      header: "Status",
+      cell: (employee: Employee) => (
+        <Badge
+          variant={employee.status === "active" ? "default" : "secondary"}
+          className={
+            employee.status === "active"
+              ? "bg-green-500/10 text-green-500"
+              : "bg-muted text-muted-foreground"
+          }
+        >
+          {employee.status === "active" ? "Active" : "Inactive"}
+        </Badge>
+      ),
+    },
+    {
+      key: "joinDate",
+      header: "Join Date",
+      cell: (employee: Employee) => formatDate(employee.joinDate),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      className: "text-right",
+      cell: (employee: Employee) => (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => handleEdit(employee)}>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleDelete(employee)}
+              className="text-red-600"
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ),
+    },
+  ];
+
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Employees</h2>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold text-foreground">Employees</h2>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               placeholder="Search employees..."
               value={searchTerm}
@@ -183,97 +253,11 @@ const EmployeeTable = ({
         </div>
       </div>
 
-      <div className="border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Employee</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Join Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredEmployees.length > 0 ? (
-              filteredEmployees.map((employee) => (
-                <TableRow key={employee.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                        {employee.avatar ? (
-                          <img
-                            src={employee.avatar}
-                            alt={employee.name}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className="text-gray-500 font-medium">
-                            {employee.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </div>
-                        )}
-                      </div>
-                      <div className="font-medium">{employee.name}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{employee.email}</TableCell>
-                  <TableCell>{employee.role}</TableCell>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        employee.status === "active" ? "default" : "secondary"
-                      }
-                      className={
-                        employee.status === "active"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
-                      }
-                    >
-                      {employee.status === "active" ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{formatDate(employee.joinDate)}</TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleEdit(employee)}>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => handleDelete(employee)}
-                          className="text-red-600"
-                        >
-                          <Trash className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="text-center py-6 text-gray-500"
-                >
-                  No employees found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <DataTable
+        data={filteredEmployees}
+        columns={columns}
+        emptyMessage="No employees found"
+      />
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>

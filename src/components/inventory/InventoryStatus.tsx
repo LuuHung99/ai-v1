@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Progress } from "../ui/progress";
 import { Badge } from "../ui/badge";
@@ -81,29 +80,29 @@ const InventoryStatus = ({
   const getStatusColor = (status: string) => {
     switch (status) {
       case "low":
-        return "bg-red-100 text-red-800 hover:bg-red-200";
+        return "bg-destructive/10 text-destructive hover:bg-destructive/20";
       case "normal":
-        return "bg-green-100 text-green-800 hover:bg-green-200";
+        return "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50";
       case "overstocked":
-        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
+        return "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-900/50";
       default:
-        return "bg-gray-100 text-gray-800 hover:bg-gray-200";
+        return "bg-muted text-muted-foreground hover:bg-muted/80";
     }
   };
 
   // Get progress bar color
   const getProgressColor = (percentage: number) => {
-    if (percentage < 20) return "bg-red-500";
+    if (percentage < 20) return "bg-destructive";
     if (percentage < 40) return "bg-orange-500";
     if (percentage < 60) return "bg-yellow-500";
     return "bg-green-500";
   };
 
   return (
-    <Card className="w-full h-full bg-white shadow-md">
+    <Card className="w-full h-full bg-card shadow-md">
       {showHeader && (
         <CardHeader className="pb-2">
-          <CardTitle className="text-xl font-semibold text-gray-800">
+          <CardTitle className="text-xl font-semibold text-foreground">
             {title}
           </CardTitle>
         </CardHeader>
@@ -113,13 +112,13 @@ const InventoryStatus = ({
           {items.map((item) => {
             const percentage = getStockPercentage(
               item.currentStock,
-              item.maxStock,
+              item.maxStock
             );
             return (
               <div key={item.id} className="space-y-2">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center space-x-2">
-                    <span className="font-medium text-gray-700">
+                    <span className="font-medium text-foreground">
                       {item.name}
                     </span>
                     <Badge
@@ -134,16 +133,14 @@ const InventoryStatus = ({
                       {item.status}
                     </Badge>
                   </div>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-muted-foreground">
                     {item.currentStock} / {item.maxStock} {item.unit}
                   </span>
                 </div>
-                <Progress
-                  value={percentage}
-                  className="h-2 bg-gray-200"
-                  indicatorClassName={getProgressColor(percentage)}
-                />
-                <div className="text-xs text-gray-500">{item.category}</div>
+                <Progress value={percentage} className={cn("h-2 bg-muted")} />
+                <div className="text-xs text-muted-foreground">
+                  {item.category}
+                </div>
               </div>
             );
           })}

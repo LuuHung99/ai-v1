@@ -11,6 +11,7 @@ import {
   Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import StatisticsChart from "./StatisticsChart";
 
 interface MetricCardProps {
   title: string;
@@ -30,7 +31,7 @@ const MetricCard = ({
   trendValue,
 }: MetricCardProps) => {
   return (
-    <Card className="bg-white">
+    <Card className="bg-card">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">
           {title}
@@ -40,7 +41,7 @@ const MetricCard = ({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-2xl font-bold text-foreground">{value}</div>
         {(description || trendValue) && (
           <div className="flex items-center mt-1">
             {trendValue && (
@@ -48,10 +49,10 @@ const MetricCard = ({
                 className={cn(
                   "mr-2 flex items-center text-xs",
                   trend === "up"
-                    ? "text-green-600"
+                    ? "text-green-600 dark:text-green-400"
                     : trend === "down"
-                      ? "text-red-600"
-                      : "text-gray-500",
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-muted-foreground"
                 )}
               >
                 {trend === "up" ? (
@@ -102,8 +103,10 @@ const ManagerMetricsPanel = ({
   inventoryAlerts = 3,
 }: ManagerMetricsPanelProps) => {
   return (
-    <div className="w-full space-y-4 bg-gray-50 p-4 rounded-lg">
-      <h2 className="text-xl font-bold">Business Performance</h2>
+    <div className="w-full space-y-4 bg-background p-4 rounded-lg">
+      <h2 className="text-xl font-bold text-foreground">
+        Business Performance
+      </h2>
 
       <Tabs defaultValue="daily" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-4">
@@ -145,9 +148,9 @@ const ManagerMetricsPanel = ({
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <Card className="bg-white">
+            <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-sm font-medium">
+                <CardTitle className="text-sm font-medium text-foreground">
                   Top Selling Items
                 </CardTitle>
               </CardHeader>
@@ -158,8 +161,10 @@ const ManagerMetricsPanel = ({
                       key={index}
                       className="flex items-center justify-between"
                     >
-                      <span className="text-sm">{item.name}</span>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm text-foreground">
+                        {item.name}
+                      </span>
+                      <span className="text-sm font-medium text-muted-foreground">
                         {item.count} orders
                       </span>
                     </li>
@@ -168,9 +173,9 @@ const ManagerMetricsPanel = ({
               </CardContent>
             </Card>
 
-            <Card className="bg-white">
+            <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-sm font-medium">
+                <CardTitle className="text-sm font-medium text-foreground">
                   Staff Performance
                 </CardTitle>
               </CardHeader>
@@ -182,12 +187,14 @@ const ManagerMetricsPanel = ({
                       className="flex items-center justify-between"
                     >
                       <div className="flex items-center">
-                        <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center mr-2">
-                          <Users className="h-4 w-4 text-gray-500" />
+                        <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center mr-2">
+                          <Users className="h-4 w-4 text-muted-foreground" />
                         </div>
-                        <span className="text-sm">{staff.name}</span>
+                        <span className="text-sm text-foreground">
+                          {staff.name}
+                        </span>
                       </div>
-                      <span className="text-sm font-medium">
+                      <span className="text-sm font-medium text-muted-foreground">
                         {staff.ordersProcessed} orders
                       </span>
                     </li>
@@ -196,6 +203,51 @@ const ManagerMetricsPanel = ({
               </CardContent>
             </Card>
           </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <StatisticsChart
+              title="Daily Revenue Trend"
+              type="line"
+              data={{
+                dates: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                values: [1200, 1320, 1010, 1340, 1290, 1330, 1245],
+              }}
+            />
+            <StatisticsChart
+              title="Top Selling Items Distribution"
+              type="pie"
+              data={{
+                dates: [],
+                values: [
+                  { value: 42, name: "Classic Milk Tea" },
+                  { value: 36, name: "Taro Milk Tea" },
+                  { value: 29, name: "Brown Sugar Boba" },
+                ],
+              }}
+            />
+          </div>
+
+          <StatisticsChart
+            title="Orders by Hour Today"
+            type="bar"
+            data={{
+              dates: [
+                "9AM",
+                "10AM",
+                "11AM",
+                "12PM",
+                "1PM",
+                "2PM",
+                "3PM",
+                "4PM",
+                "5PM",
+                "6PM",
+                "7PM",
+                "8PM",
+              ],
+              values: [12, 15, 8, 25, 18, 22, 20, 16, 14, 19, 23, 17],
+            }}
+          />
         </TabsContent>
 
         <TabsContent value="weekly" className="space-y-4">
@@ -229,6 +281,15 @@ const ManagerMetricsPanel = ({
               icon={<Clock className="h-4 w-4" />}
             />
           </div>
+
+          <StatisticsChart
+            title="Weekly Revenue Trend"
+            type="bar"
+            data={{
+              dates: ["Week 1", "Week 2", "Week 3", "Week 4"],
+              values: [7500, 8200, 8942, 8500],
+            }}
+          />
         </TabsContent>
 
         <TabsContent value="monthly" className="space-y-4">
@@ -263,6 +324,15 @@ const ManagerMetricsPanel = ({
               icon={<TrendingUp className="h-4 w-4" />}
             />
           </div>
+
+          <StatisticsChart
+            title="Monthly Revenue Trend"
+            type="line"
+            data={{
+              dates: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+              values: [25000, 28000, 29500, 32758, 31000, 33500],
+            }}
+          />
         </TabsContent>
       </Tabs>
     </div>

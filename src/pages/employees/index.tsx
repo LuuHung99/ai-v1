@@ -46,9 +46,9 @@ const EmployeesPage = () => {
   };
 
   return (
-    <DashboardLayout userRole="manager">
+    <DashboardLayout>
       <Helmet>
-        <title>Employee Management | Bubble Tea Shop</title>
+        <title>Employee Management | Base</title>
       </Helmet>
 
       <div className="flex flex-col gap-6 bg-gray-50 min-h-screen">

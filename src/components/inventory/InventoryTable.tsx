@@ -1,31 +1,20 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
   Search,
-  Filter,
   Plus,
   Edit,
   Trash2,
   AlertTriangle,
+  Loader2,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -34,17 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface InventoryItem {
-  id: string;
-  name: string;
-  category: string;
-  currentStock: number;
-  threshold: number;
-  unit: string;
-  lastUpdated: string;
-  supplier: string;
-}
+import InventoryForm, { InventoryItem } from "./InventoryForm";
+import { DataTable } from "@/components/ui/data-table";
+import { toast } from "sonner";
 
 const InventoryTable = ({
   items = sampleInventoryItems,
@@ -55,7 +36,9 @@ const InventoryTable = ({
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Filter items based on search term and filters
   const filteredItems = items.filter((item) => {
@@ -106,131 +89,168 @@ const InventoryTable = ({
     setIsDeleteDialogOpen(true);
   };
 
-  const confirmDelete = () => {
-    // Handle delete logic here
-    console.log(`Deleting item: ${selectedItem?.name}`);
+  const confirmDelete = async () => {
     setIsDeleteDialogOpen(false);
-    setSelectedItem(null);
+    setIsLoading(true);
+    toast.success("Item deleted successfully");
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } finally {
+      setIsLoading(false);
+      setSelectedItem(null);
+    }
   };
 
-  return (
-    <Card className="w-full bg-white shadow-sm">
-      <CardHeader className="pb-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <CardTitle className="text-2xl font-bold">
-            Inventory Management
-          </CardTitle>
-          <Button className="flex items-center gap-2">
-            <Plus size={16} />
-            Add New Item
+  const handleAddItem = async (item: Partial<InventoryItem>) => {
+    setIsLoading(true);
+    try {
+      // Handle add logic here
+      console.log("Adding new item:", item);
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } finally {
+      setIsLoading(false);
+      setIsAddDialogOpen(false);
+    }
+  };
+
+  const columns = [
+    {
+      key: "name",
+      header: "Item Name",
+      className: "w-[250px]",
+      cell: (item: InventoryItem) => (
+        <span className="font-medium text-foreground">{item.name}</span>
+      ),
+    },
+    {
+      key: "category",
+      header: "Category",
+      cell: (item: InventoryItem) => (
+        <Badge variant="outline" className="capitalize bg-background">
+          {item.category}
+        </Badge>
+      ),
+    },
+    {
+      key: "currentStock",
+      header: "Current Stock",
+      cell: (item: InventoryItem) => (
+        <span>
+          {item.currentStock} {item.unit}
+        </span>
+      ),
+    },
+    {
+      key: "threshold",
+      header: "Threshold",
+      cell: (item: InventoryItem) => (
+        <span>
+          {item.threshold} {item.unit}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      cell: (item: InventoryItem) => getStatusBadge(getItemStatus(item)),
+    },
+    {
+      key: "supplier",
+      header: "Supplier",
+    },
+    {
+      key: "lastUpdated",
+      header: "Last Updated",
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      className: "text-right",
+      cell: (item: InventoryItem) => (
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" size="icon">
+            <Edit size={16} />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            className="text-red-500 hover:text-red-700"
+            onClick={() => handleDeleteClick(item)}
+          >
+            <Trash2 size={16} />
           </Button>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search items or suppliers..."
-              className="pl-8"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <div className="flex items-center gap-2">
-              <Filter size={16} className="text-muted-foreground" />
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="tea">Tea</SelectItem>
-                  <SelectItem value="milk">Milk</SelectItem>
-                  <SelectItem value="topping">Toppings</SelectItem>
-                  <SelectItem value="syrup">Syrups</SelectItem>
-                  <SelectItem value="cup">Cups & Lids</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center gap-2">
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="ok">In Stock</SelectItem>
-                  <SelectItem value="low">Low Stock</SelectItem>
-                  <SelectItem value="out">Out of Stock</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
+      ),
+    },
+  ];
 
-        <div className="rounded-md border overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[250px]">Item Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Current Stock</TableHead>
-                <TableHead>Threshold</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Supplier</TableHead>
-                <TableHead>Last Updated</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="capitalize">
-                        {item.category}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {item.currentStock} {item.unit}
-                    </TableCell>
-                    <TableCell>
-                      {item.threshold} {item.unit}
-                    </TableCell>
-                    <TableCell>{getStatusBadge(getItemStatus(item))}</TableCell>
-                    <TableCell>{item.supplier}</TableCell>
-                    <TableCell>{item.lastUpdated}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="outline" size="icon">
-                          <Edit size={16} />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="text-red-500 hover:text-red-700"
-                          onClick={() => handleDeleteClick(item)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8} className="h-24 text-center">
-                    No inventory items found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <h2 className="text-2xl font-bold text-foreground">
+          Inventory Management
+        </h2>
+        <Button
+          className="flex items-center gap-2"
+          onClick={() => setIsAddDialogOpen(true)}
+        >
+          <Plus size={16} />
+          Add New Item
+        </Button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search items or suppliers..."
+            className="pl-8"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
-      </CardContent>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2">
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Categories</SelectItem>
+                <SelectItem value="tea">Tea</SelectItem>
+                <SelectItem value="milk">Milk</SelectItem>
+                <SelectItem value="topping">Toppings</SelectItem>
+                <SelectItem value="syrup">Syrups</SelectItem>
+                <SelectItem value="cup">Cups & Lids</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Status</SelectItem>
+                <SelectItem value="ok">In Stock</SelectItem>
+                <SelectItem value="low">Low Stock</SelectItem>
+                <SelectItem value="out">Out of Stock</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative">
+        <DataTable
+          loading={isLoading}
+          data={filteredItems}
+          columns={columns}
+          emptyMessage="No inventory items found"
+        />
+      </div>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
@@ -260,7 +280,14 @@ const InventoryTable = ({
           </div>
         </DialogContent>
       </Dialog>
-    </Card>
+
+      {/* Add/Edit Item Form */}
+      <InventoryForm
+        isOpen={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+        onSubmit={handleAddItem}
+      />
+    </div>
   );
 };
 

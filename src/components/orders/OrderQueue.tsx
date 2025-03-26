@@ -72,7 +72,7 @@ const OrderQueue = ({
   };
 
   return (
-    <Card className="w-full h-full bg-white shadow-sm">
+    <Card className="w-full h-full  shadow-sm">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold flex items-center">
           <Coffee className="mr-2 h-5 w-5" /> Order Queue
@@ -89,7 +89,7 @@ const OrderQueue = ({
             <TabsTrigger value="completed">Completed</TabsTrigger>
           </TabsList>
 
-          <ScrollArea className="h-[320px] pr-4">
+          <ScrollArea className="h-[420px] pr-4">
             {filteredOrders.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[200px] text-gray-500">
                 <Coffee className="h-12 w-12 mb-2 opacity-30" />
@@ -98,10 +98,7 @@ const OrderQueue = ({
             ) : (
               <div className="space-y-3">
                 {filteredOrders.map((order) => (
-                  <Card
-                    key={order.id}
-                    className="overflow-hidden border border-gray-200"
-                  >
+                  <Card key={order.id} className="overflow-hidden border">
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-2">
                         <div>
@@ -115,7 +112,7 @@ const OrderQueue = ({
                           <Badge
                             className={cn(
                               statusColors[order.status],
-                              "flex items-center gap-1",
+                              "flex items-center gap-1"
                             )}
                           >
                             {statusIcons[order.status]}

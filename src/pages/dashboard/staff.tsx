@@ -33,7 +33,7 @@ const StaffDashboard = () => {
   };
 
   return (
-    <DashboardLayout userRole="staff" userName="Staff User">
+    <DashboardLayout>
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight">Staff Dashboard</h1>

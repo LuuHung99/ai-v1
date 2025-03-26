@@ -31,33 +31,35 @@ interface QuickAction {
 
 const QuickActions = ({ actions = defaultActions }: QuickActionProps) => {
   return (
-    <Card className="w-full p-4 bg-white shadow-sm">
-      <h3 className="text-lg font-medium mb-3">Quick Actions</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-        {actions.map((action) => (
-          <TooltipProvider key={action.id}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "h-24 w-full flex flex-col items-center justify-center gap-2 hover:bg-slate-50",
-                    action.color,
-                  )}
-                  onClick={action.onClick}
-                >
-                  {action.icon}
-                  <span className="text-sm font-medium">{action.label}</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{action.label}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        ))}
-      </div>
-    </Card>
+    <>
+      <Card className="w-full p-4 bg-white shadow-sm">
+        <h3 className="text-lg font-medium mb-3">Quick Actions</h3>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {actions.map((action) => (
+            <TooltipProvider key={action.id}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "h-24 w-full flex flex-col items-center justify-center gap-2 hover:bg-slate-50",
+                      action.color
+                    )}
+                    onClick={action.onClick}
+                  >
+                    {action.icon}
+                    <span className="text-sm font-medium">{action.label}</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{action.label}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ))}
+        </div>
+      </Card>
+    </>
   );
 };
 

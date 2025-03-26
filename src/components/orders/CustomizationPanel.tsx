@@ -66,7 +66,7 @@ const CustomizationPanel = ({
   const updateCustomizations = (
     sugar: number,
     ice: number,
-    toppings: string[],
+    toppings: string[]
   ) => {
     onCustomizationChange({
       sugarLevel: sugar,
@@ -164,7 +164,7 @@ const CustomizationPanel = ({
                 key={topping.id}
                 className={cn(
                   "flex items-center space-x-2 rounded-md border p-3",
-                  !topping.available && "opacity-50",
+                  !topping.available && "opacity-50"
                 )}
               >
                 <Checkbox
@@ -180,7 +180,7 @@ const CustomizationPanel = ({
                   <Label
                     htmlFor={`topping-${topping.id}`}
                     className={cn(
-                      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+                      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     )}
                   >
                     {topping.name}
