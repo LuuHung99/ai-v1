@@ -1,0 +1,156 @@
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Progress } from "../ui/progress";
+import { Badge } from "../ui/badge";
+import { AlertTriangle, CheckCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface InventoryItem {
+  id: string;
+  name: string;
+  currentStock: number;
+  maxStock: number;
+  unit: string;
+  category: string;
+  status: "low" | "normal" | "overstocked";
+}
+
+interface InventoryStatusProps {
+  items?: InventoryItem[];
+  title?: string;
+  showHeader?: boolean;
+}
+
+const InventoryStatus = ({
+  items = [
+    {
+      id: "1",
+      name: "Milk Tea Powder",
+      currentStock: 5,
+      maxStock: 50,
+      unit: "kg",
+      category: "Tea Base",
+      status: "low",
+    },
+    {
+      id: "2",
+      name: "Tapioca Pearls",
+      currentStock: 30,
+      maxStock: 60,
+      unit: "kg",
+      category: "Toppings",
+      status: "normal",
+    },
+    {
+      id: "3",
+      name: "Brown Sugar",
+      currentStock: 25,
+      maxStock: 40,
+      unit: "kg",
+      category: "Sweeteners",
+      status: "normal",
+    },
+    {
+      id: "4",
+      name: "Plastic Cups (Large)",
+      currentStock: 120,
+      maxStock: 500,
+      unit: "pcs",
+      category: "Packaging",
+      status: "low",
+    },
+    {
+      id: "5",
+      name: "Grass Jelly",
+      currentStock: 15,
+      maxStock: 30,
+      unit: "kg",
+      category: "Toppings",
+      status: "normal",
+    },
+  ],
+  title = "Inventory Status",
+  showHeader = true,
+}: InventoryStatusProps) => {
+  // Calculate percentage for progress bar
+  const getStockPercentage = (current: number, max: number) => {
+    return Math.min(Math.round((current / max) * 100), 100);
+  };
+
+  // Get status color
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "low":
+        return "bg-red-100 text-red-800 hover:bg-red-200";
+      case "normal":
+        return "bg-green-100 text-green-800 hover:bg-green-200";
+      case "overstocked":
+        return "bg-yellow-100 text-yellow-800 hover:bg-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-800 hover:bg-gray-200";
+    }
+  };
+
+  // Get progress bar color
+  const getProgressColor = (percentage: number) => {
+    if (percentage < 20) return "bg-red-500";
+    if (percentage < 40) return "bg-orange-500";
+    if (percentage < 60) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
+  return (
+    <Card className="w-full h-full bg-white shadow-md">
+      {showHeader && (
+        <CardHeader className="pb-2">
+          <CardTitle className="text-xl font-semibold text-gray-800">
+            {title}
+          </CardTitle>
+        </CardHeader>
+      )}
+      <CardContent>
+        <div className="space-y-4">
+          {items.map((item) => {
+            const percentage = getStockPercentage(
+              item.currentStock,
+              item.maxStock,
+            );
+            return (
+              <div key={item.id} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium text-gray-700">
+                      {item.name}
+                    </span>
+                    <Badge
+                      className={cn("text-xs", getStatusColor(item.status))}
+                    >
+                      {item.status === "low" && (
+                        <AlertTriangle className="h-3 w-3 mr-1" />
+                      )}
+                      {item.status === "normal" && (
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                      )}
+                      {item.status}
+                    </Badge>
+                  </div>
+                  <span className="text-sm text-gray-600">
+                    {item.currentStock} / {item.maxStock} {item.unit}
+                  </span>
+                </div>
+                <Progress
+                  value={percentage}
+                  className="h-2 bg-gray-200"
+                  indicatorClassName={getProgressColor(percentage)}
+                />
+                <div className="text-xs text-gray-500">{item.category}</div>
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default InventoryStatus;
