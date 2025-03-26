@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Download, Filter } from "lucide-react";
 import { DataTable } from "../ui/data-table";
@@ -79,6 +79,9 @@ const ReportTable = ({
   onDownload = () => console.log("Download report"),
   onFilter = () => console.log("Filter report"),
 }: ReportTableProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+
   // Calculate totals for the footer
   const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
   const totalRevenue = data.reduce((sum, item) => sum + item.revenue, 0);
@@ -162,6 +165,10 @@ const ReportTable = ({
         showFooter={true}
         footerContent={footerContent}
         emptyMessage="No report data found"
+        currentPage={currentPage}
+        pageSize={pageSize}
+        onPageChange={setCurrentPage}
+        showPagination={true}
       />
     </div>
   );

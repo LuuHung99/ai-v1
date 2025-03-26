@@ -26,6 +26,7 @@ import {
 import InventoryForm, { InventoryItem } from "./InventoryForm";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
+import React from "react";
 
 const InventoryTable = ({
   items = sampleInventoryItems,
@@ -39,6 +40,8 @@ const InventoryTable = ({
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 2;
 
   // Filter items based on search term and filters
   const filteredItems = items.filter((item) => {
@@ -58,6 +61,11 @@ const InventoryTable = ({
 
     return matchesSearch && matchesCategory && matchesStatus;
   });
+
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, categoryFilter, statusFilter]);
 
   // Determine status based on current stock and threshold
   function getItemStatus(item: InventoryItem): "ok" | "low" | "out" {
@@ -249,6 +257,10 @@ const InventoryTable = ({
           data={filteredItems}
           columns={columns}
           emptyMessage="No inventory items found"
+          currentPage={currentPage}
+          pageSize={pageSize}
+          onPageChange={setCurrentPage}
+          showPagination={true}
         />
       </div>
 

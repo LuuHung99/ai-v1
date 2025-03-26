@@ -11,9 +11,7 @@ import "./styles/colors.css";
 import "./styles/globals.css";
 
 // Import các components chính
-import OrdersList from "./components/orders/OrdersList";
 import NewOrder from "./components/orders/NewOrder";
-import EmployeesList from "./components/employees/EmployeesList";
 import Reports from "./components/reports/Reports";
 import Settings from "./components/management/Settings";
 import Profile from "./components/management/Profile";

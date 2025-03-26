@@ -94,6 +94,8 @@ const EmployeeTable = ({
   onAdd = () => {},
 }: EmployeeTableProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
     null
   );
@@ -105,6 +107,10 @@ const EmployeeTable = ({
       employee.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.role.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   const handleEdit = (employee: Employee) => {
     onEdit(employee);
