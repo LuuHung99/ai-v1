@@ -27,9 +27,9 @@ import InventoryForm, { InventoryItem } from "./InventoryForm";
 import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import React from "react";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface FilterState {
-  searchTerm: string;
   category: string;
   status: string;
 }
@@ -40,7 +40,6 @@ const InventoryTable = ({
   items?: InventoryItem[];
 }) => {
   const [filters, setFilters] = useState<FilterState>({
-    searchTerm: "",
     category: "all",
     status: "all",
   });
@@ -51,6 +50,9 @@ const InventoryTable = ({
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 2;
+  const [searchItem, setSearchItem] = useState<string>("");
+
+  const debouncedSearch = useDebounce(searchItem, 500);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -60,10 +62,8 @@ const InventoryTable = ({
 
       const filtered = items.filter((item) => {
         const matchesSearch =
-          item.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
-          item.supplier
-            .toLowerCase()
-            .includes(filters.searchTerm.toLowerCase());
+          item.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+          item.supplier.toLowerCase().includes(debouncedSearch.toLowerCase());
 
         const matchesCategory =
           filters.category === "all" || item.category === filters.category;
@@ -87,7 +87,7 @@ const InventoryTable = ({
 
   useEffect(() => {
     fetchData();
-  }, [filters]);
+  }, [filters, debouncedSearch]);
 
   // Determine status based on current stock and threshold
   function getItemStatus(item: InventoryItem): "ok" | "low" | "out" {
@@ -237,10 +237,8 @@ const InventoryTable = ({
           <Input
             placeholder="Search items or suppliers..."
             className="pl-8"
-            value={filters.searchTerm}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, searchTerm: e.target.value }))
-            }
+            value={searchItem}
+            onChange={(e) => setSearchItem(e.target.value)}
           />
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
