@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -28,14 +28,23 @@ import { DataTable } from "@/components/ui/data-table";
 import { toast } from "sonner";
 import React from "react";
 
+interface FilterState {
+  searchTerm: string;
+  category: string;
+  status: string;
+}
+
 const InventoryTable = ({
   items = sampleInventoryItems,
 }: {
   items?: InventoryItem[];
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [filters, setFilters] = useState<FilterState>({
+    searchTerm: "",
+    category: "all",
+    status: "all",
+  });
+  const [filteredItems, setFilteredItems] = useState<InventoryItem[]>([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<InventoryItem | null>(null);
@@ -43,29 +52,42 @@ const InventoryTable = ({
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 2;
 
-  // Filter items based on search term and filters
-  const filteredItems = items.filter((item) => {
-    const matchesSearch =
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.supplier.toLowerCase().includes(searchTerm.toLowerCase());
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    const matchesCategory =
-      categoryFilter === "all" || item.category === categoryFilter;
+      const filtered = items.filter((item) => {
+        const matchesSearch =
+          item.name.toLowerCase().includes(filters.searchTerm.toLowerCase()) ||
+          item.supplier
+            .toLowerCase()
+            .includes(filters.searchTerm.toLowerCase());
 
-    const itemStatus = getItemStatus(item);
-    const matchesStatus =
-      statusFilter === "all" ||
-      (statusFilter === "low" && itemStatus === "low") ||
-      (statusFilter === "out" && itemStatus === "out") ||
-      (statusFilter === "ok" && itemStatus === "ok");
+        const matchesCategory =
+          filters.category === "all" || item.category === filters.category;
 
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
+        const itemStatus = getItemStatus(item);
+        const matchesStatus =
+          filters.status === "all" ||
+          (filters.status === "low" && itemStatus === "low") ||
+          (filters.status === "out" && itemStatus === "out") ||
+          (filters.status === "ok" && itemStatus === "ok");
 
-  // Reset to first page when filters change
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [searchTerm, categoryFilter, statusFilter]);
+        return matchesSearch && matchesCategory && matchesStatus;
+      });
+
+      setFilteredItems(filtered);
+      setCurrentPage(1); // Reset to first page when filters change
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [filters]);
 
   // Determine status based on current stock and threshold
   function getItemStatus(item: InventoryItem): "ok" | "low" | "out" {
@@ -215,13 +237,20 @@ const InventoryTable = ({
           <Input
             placeholder="Search items or suppliers..."
             className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={filters.searchTerm}
+            onChange={(e) =>
+              setFilters((prev) => ({ ...prev, searchTerm: e.target.value }))
+            }
           />
         </div>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <div className="flex items-center gap-2">
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <Select
+              value={filters.category}
+              onValueChange={(value) =>
+                setFilters((prev) => ({ ...prev, category: value }))
+              }
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -236,7 +265,12 @@ const InventoryTable = ({
             </Select>
           </div>
           <div className="flex items-center gap-2">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select
+              value={filters.status}
+              onValueChange={(value) =>
+                setFilters((prev) => ({ ...prev, status: value }))
+              }
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -377,6 +411,46 @@ const sampleInventoryItems: InventoryItem[] = [
   },
   {
     id: "8",
+    name: "Grass Jelly",
+    category: "topping",
+    currentStock: 7,
+    threshold: 5,
+    unit: "kg",
+    lastUpdated: "2023-06-13",
+    supplier: "Bubble Tea Essentials",
+  },
+  {
+    id: "9",
+    name: "Grass Jelly",
+    category: "topping",
+    currentStock: 7,
+    threshold: 5,
+    unit: "kg",
+    lastUpdated: "2023-06-13",
+    supplier: "Bubble Tea Essentials",
+  },
+  {
+    id: "10",
+    name: "Grass Jelly",
+    category: "topping",
+    currentStock: 7,
+    threshold: 5,
+    unit: "kg",
+    lastUpdated: "2023-06-13",
+    supplier: "Bubble Tea Essentials",
+  },
+  {
+    id: "11",
+    name: "Grass Jelly",
+    category: "topping",
+    currentStock: 7,
+    threshold: 5,
+    unit: "kg",
+    lastUpdated: "2023-06-13",
+    supplier: "Bubble Tea Essentials",
+  },
+  {
+    id: "12",
     name: "Grass Jelly",
     category: "topping",
     currentStock: 7,

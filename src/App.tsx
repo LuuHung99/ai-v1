@@ -16,6 +16,7 @@ import EmployeesPage from "./pages/employees";
 import Profile from "./components/management/Profile";
 import Settings from "./components/management/Settings";
 import { Toaster } from "sonner";
+import NetworkStatusToast from "./components/ui/use-network";
 
 function App() {
   return (
@@ -74,6 +75,7 @@ function App() {
         </div>
       </AuthProvider>
       <Toaster position="top-right" richColors />
+      <NetworkStatusToast />
     </ThemeProvider>
   );
 }

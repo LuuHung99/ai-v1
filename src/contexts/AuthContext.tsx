@@ -1,6 +1,6 @@
 import { UserInfo } from "@/components/auth/LoginForm";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 
 interface AuthContextType {
   user: UserInfo;
@@ -12,11 +12,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserInfo>(null);
+  const navigate = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
-    redirect("/login");
+    navigate("/login");
   };
 
   return (

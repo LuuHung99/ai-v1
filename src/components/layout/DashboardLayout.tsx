@@ -10,9 +10,6 @@ import {
   Settings,
   LogOut,
   Menu,
-  X,
-  Bell,
-  User,
   Sun,
   Moon,
   ChevronLeft,
@@ -20,7 +17,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   DropdownMenu,
@@ -80,7 +76,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     to={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      isActive ? "bg-primary" : "hover:bg-muted"
+                      isActive
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
                     )}
                     onClick={() => setIsSidebarOpen(false)}
                   >
@@ -127,7 +125,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 to={item.href}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive ? "bg-primary" : "hover:bg-muted",
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted",
                   isCollapsed && "justify-center"
                 )}
               >
@@ -192,14 +192,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/profile">Profile</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
+                <DropdownMenuItem asChild className="cursor-pointer">
                   <Link to="/settings">Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
+                <DropdownMenuItem onClick={logout} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   Logout
                 </DropdownMenuItem>
