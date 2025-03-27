@@ -15,6 +15,7 @@ import InventoryPage from "./pages/inventory";
 import EmployeesPage from "./pages/employees";
 import Profile from "./components/management/Profile";
 import Settings from "./components/management/Settings";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
           </Suspense>
         </div>
       </AuthProvider>
+      <Toaster position="top-right" richColors />
     </ThemeProvider>
   );
 }

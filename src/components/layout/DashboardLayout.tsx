@@ -80,9 +80,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                     to={item.href}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "hover:bg-muted"
+                      isActive ? "bg-primary" : "hover:bg-muted"
                     )}
                     onClick={() => setIsSidebarOpen(false)}
                   >
@@ -129,9 +127,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 to={item.href}
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-muted",
+                  isActive ? "bg-primary" : "hover:bg-muted",
                   isCollapsed && "justify-center"
                 )}
               >

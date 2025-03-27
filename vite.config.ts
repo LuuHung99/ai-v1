@@ -11,7 +11,7 @@ const conditionalPlugins: [string, Record<string, any>][] = [];
 export default defineConfig({
   base: "/",
   optimizeDeps: {
-    entries: ["src/main.tsx", "src/tempobook/**/*"],
+    entries: ["src/main.tsx"],
   },
   plugins: [
     react({

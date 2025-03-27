@@ -72,7 +72,6 @@ const LoginForm = ({ onSuccess = () => {}, error = "" }: LoginFormProps) => {
       localStorage.setItem("token", response.data.accessToken);
       setUser(response.data.info);
       navigate("/");
-      toast.success("Login successful");
       onSuccess();
     } catch (error: any) {
       console.error("Login error:", error);
