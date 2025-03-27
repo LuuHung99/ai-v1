@@ -51,38 +51,40 @@ const InventoryPage = () => {
   ];
 
   return (
-    <DashboardLayout>
+    <>
       <Helmet>
         <title>Inventory Management | Base</title>
       </Helmet>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 p-4">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {inventoryStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <Card key={index} className="bg-white">
+              <Card key={index} className="bg-card">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-muted-foreground">
                         {stat.title}
                       </p>
-                      <h3 className="text-2xl font-bold mt-1">{stat.value}</h3>
+                      <h3 className="text-2xl font-bold mt-1 text-foreground">
+                        {stat.value}
+                      </h3>
                     </div>
                     <div
                       className={`p-2 rounded-full ${
                         stat.changeType === "positive"
-                          ? "bg-green-100"
-                          : "bg-red-100"
+                          ? "bg-green-100 dark:bg-green-900/30"
+                          : "bg-red-100 dark:bg-red-900/30"
                       }`}
                     >
                       <Icon
                         className={`h-5 w-5 ${
                           stat.changeType === "positive"
-                            ? "text-green-600"
-                            : "text-red-600"
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-red-600 dark:text-red-400"
                         }`}
                       />
                     </div>
@@ -93,8 +95,8 @@ const InventoryPage = () => {
                   <p
                     className={`text-xs font-medium mt-1 ${
                       stat.changeType === "positive"
-                        ? "text-green-600"
-                        : "text-red-600"
+                        ? "text-green-600 dark:text-green-400"
+                        : "text-red-600 dark:text-red-400"
                     }`}
                   >
                     {stat.change}
@@ -125,7 +127,7 @@ const InventoryPage = () => {
           <TabsContent value="orders" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2">
-                <Card className="bg-white shadow-sm">
+                <Card className="bg-card shadow-sm">
                   <CardHeader>
                     <CardTitle>Recent Supply Orders</CardTitle>
                     <CardDescription>
@@ -136,60 +138,78 @@ const InventoryPage = () => {
                     <div className="rounded-md border overflow-hidden">
                       <table className="w-full text-sm">
                         <thead>
-                          <tr className="border-b bg-slate-50">
-                            <th className="px-4 py-3 text-left font-medium">
+                          <tr className="border-b bg-muted">
+                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                               Order ID
                             </th>
-                            <th className="px-4 py-3 text-left font-medium">
+                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                               Item
                             </th>
-                            <th className="px-4 py-3 text-left font-medium">
+                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                               Supplier
                             </th>
-                            <th className="px-4 py-3 text-left font-medium">
+                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                               Date
                             </th>
-                            <th className="px-4 py-3 text-left font-medium">
+                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">
                               Status
                             </th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr className="border-b">
-                            <td className="px-4 py-3 font-medium">
+                            <td className="px-4 py-3 font-medium text-foreground">
                               ORD-2023-001
                             </td>
-                            <td className="px-4 py-3">Brown Sugar Syrup</td>
-                            <td className="px-4 py-3">Sweet Flavors Inc.</td>
-                            <td className="px-4 py-3">2023-06-18</td>
+                            <td className="px-4 py-3 text-foreground">
+                              Brown Sugar Syrup
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              Sweet Flavors Inc.
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              2023-06-18
+                            </td>
                             <td className="px-4 py-3">
-                              <span className="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
+                              <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-400">
                                 In Transit
                               </span>
                             </td>
                           </tr>
                           <tr className="border-b">
-                            <td className="px-4 py-3 font-medium">
+                            <td className="px-4 py-3 font-medium text-foreground">
                               ORD-2023-002
                             </td>
-                            <td className="px-4 py-3">Tapioca Pearls</td>
-                            <td className="px-4 py-3">Bubble Tea Essentials</td>
-                            <td className="px-4 py-3">2023-06-15</td>
+                            <td className="px-4 py-3 text-foreground">
+                              Tapioca Pearls
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              Bubble Tea Essentials
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              2023-06-15
+                            </td>
                             <td className="px-4 py-3">
-                              <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                              <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-400">
                                 Delivered
                               </span>
                             </td>
                           </tr>
                           <tr>
-                            <td className="px-4 py-3 font-medium">
+                            <td className="px-4 py-3 font-medium text-foreground">
                               ORD-2023-003
                             </td>
-                            <td className="px-4 py-3">Almond Milk</td>
-                            <td className="px-4 py-3">Plant-Based Beverages</td>
-                            <td className="px-4 py-3">2023-06-20</td>
+                            <td className="px-4 py-3 text-foreground">
+                              Almond Milk
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              Plant-Based Beverages
+                            </td>
+                            <td className="px-4 py-3 text-foreground">
+                              2023-06-20
+                            </td>
                             <td className="px-4 py-3">
-                              <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+                              <span className="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-400">
                                 Processing
                               </span>
                             </td>
@@ -208,7 +228,7 @@ const InventoryPage = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

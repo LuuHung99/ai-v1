@@ -111,7 +111,7 @@ export function DataTable<T>({
         </Table>
       </div>
 
-      {showPagination && (
+      {showPagination && data.length > 0 && (
         <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}

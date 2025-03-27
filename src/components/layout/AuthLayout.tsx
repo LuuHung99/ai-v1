@@ -21,7 +21,7 @@ const AuthLayout = ({
         <div className="mx-auto w-full max-w-md">
           <div className="flex flex-col space-y-2 text-center">
             <div className="mb-6 flex justify-center">
-              <div className="h-16 w-16 rounded-full bg-primary p-3 text-white">
+              <div className="h-16 w-16 rounded-full bg-primary p-3 text-primary-foreground">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -43,7 +43,9 @@ const AuthLayout = ({
                 </svg>
               </div>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              {title}
+            </h1>
             <p className="text-muted-foreground">{subtitle}</p>
           </div>
           <div className="mt-8">{children}</div>

@@ -96,41 +96,43 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 w-full bg-gray-50 p-4">
+    <div className="flex flex-col lg:flex-row gap-6 w-full bg-background p-4">
       <div className="flex-1">
-        <Card className="shadow-md">
+        <Card className="shadow-md bg-card">
           <CardContent className="p-6">
             <Tabs
               value={currentStep}
               onValueChange={setCurrentStep}
               className="w-full"
             >
-              <TabsList className="grid w-full grid-cols-3 mb-8">
+              <TabsList className="grid w-full grid-cols-3 mb-8 bg-muted">
                 <TabsTrigger
                   value="select-drink"
                   disabled={currentStep === "checkout"}
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground"
                 >
                   1. Select Drink
                 </TabsTrigger>
                 <TabsTrigger
                   value="customize"
                   disabled={!selectedDrink || currentStep === "checkout"}
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground"
                 >
                   2. Customize
                 </TabsTrigger>
                 <TabsTrigger
                   value="checkout"
                   disabled={orderItems.length === 0}
-                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                  className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=inactive]:text-muted-foreground"
                 >
                   3. Checkout
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="select-drink" className="mt-0">
-                <h2 className="text-2xl font-bold mb-4">Select Your Drink</h2>
+                <h2 className="text-2xl font-bold mb-4 text-foreground">
+                  Select Your Drink
+                </h2>
                 <DrinkSelector onSelect={handleDrinkSelect} />
               </TabsContent>
 
@@ -142,38 +144,22 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
                     onClick={() => setCurrentStep("select-drink")}
                     className="mr-4"
                   >
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Menu
                   </Button>
-                  <h2 className="text-2xl font-bold">Customize Your Drink</h2>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Customize Your Drink
+                  </h2>
                 </div>
 
-                {selectedDrink && (
-                  <div className="mb-6">
-                    <div className="flex items-center gap-4 p-4 bg-muted rounded-lg">
-                      <img
-                        src={selectedDrink.image}
-                        alt={selectedDrink.name}
-                        className="w-16 h-16 rounded-md object-cover"
-                      />
-                      <div>
-                        <h3 className="font-medium">{selectedDrink.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {selectedDrink.description}
-                        </p>
-                        <p className="font-medium mt-1">
-                          ${selectedDrink.price.toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                <CustomizationPanel
+                  drink={selectedDrink!}
+                  customization={customization}
+                  onChange={handleCustomizationChange}
+                />
 
-                <CustomizationPanel />
-
-                <div className="flex justify-end mt-6">
-                  <Button onClick={handleAddToOrder} className="gap-2">
-                    <ShoppingCart className="h-4 w-4" />
-                    Add to Order
+                <div className="mt-6 flex justify-end">
+                  <Button onClick={handleAddToOrder}>
+                    Add to Order <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               </TabsContent>
@@ -188,12 +174,16 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
                   >
                     <ArrowLeft className="mr-2 h-4 w-4" /> Back to Menu
                   </Button>
-                  <h2 className="text-2xl font-bold">Review & Checkout</h2>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    Review & Checkout
+                  </h2>
                 </div>
 
                 <div className="space-y-6">
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Order Items</h3>
+                  <div className="border rounded-lg p-4 bg-card">
+                    <h3 className="font-medium mb-2 text-foreground">
+                      Order Items
+                    </h3>
                     {orderItems.map((item, index) => (
                       <div
                         key={index}
@@ -206,7 +196,9 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
                             className="w-12 h-12 rounded-md object-cover"
                           />
                           <div>
-                            <p className="font-medium">{item.drink.name}</p>
+                            <p className="font-medium text-foreground">
+                              {item.drink.name}
+                            </p>
                             <p className="text-xs text-muted-foreground">
                               {item.customization.sugarLevel} sugar,{" "}
                               {item.customization.iceLevel} ice
@@ -217,20 +209,24 @@ const OrderForm = ({ onOrderComplete = () => {} }: OrderFormProps) => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">
+                          <p className="font-medium text-foreground">
                             ${item.drink.price.toFixed(2)}
                           </p>
-                          <p className="text-sm">Qty: {item.quantity}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Qty: {item.quantity}
+                          </p>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="border rounded-lg p-4">
-                    <h3 className="font-medium mb-2">Payment Method</h3>
-                    <div className="flex items-center gap-2 p-2 border rounded-md">
+                  <div className="border rounded-lg p-4 bg-card">
+                    <h3 className="font-medium mb-2 text-foreground">
+                      Payment Method
+                    </h3>
+                    <div className="flex items-center gap-2 p-2 border rounded-md bg-muted">
                       <Check className="h-4 w-4 text-green-500" />
-                      <span>Cash on Delivery</span>
+                      <span className="text-foreground">Cash on Delivery</span>
                     </div>
                   </div>
 

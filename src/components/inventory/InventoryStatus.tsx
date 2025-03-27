@@ -93,9 +93,9 @@ const InventoryStatus = ({
   // Get progress bar color
   const getProgressColor = (percentage: number) => {
     if (percentage < 20) return "bg-destructive";
-    if (percentage < 40) return "bg-orange-500";
-    if (percentage < 60) return "bg-yellow-500";
-    return "bg-green-500";
+    if (percentage < 40) return "bg-orange-500 dark:bg-orange-400";
+    if (percentage < 60) return "bg-yellow-500 dark:bg-yellow-400";
+    return "bg-green-500 dark:bg-green-400";
   };
 
   return (

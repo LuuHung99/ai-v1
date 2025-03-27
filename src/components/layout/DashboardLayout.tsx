@@ -15,6 +15,8 @@ import {
   User,
   Sun,
   Moon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,6 +40,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuth();
 
@@ -94,9 +97,28 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </Sheet>
 
       {/* Desktop sidebar */}
-      <div className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r bg-card lg:block">
-        <div className="flex h-16 items-center justify-center px-4 ">
-          <h2 className="text-lg font-semibold text-center">Base</h2>
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 hidden border-r bg-card lg:block transition-all duration-300",
+          isCollapsed ? "w-16" : "w-64"
+        )}
+      >
+        <div className="flex h-16 items-center justify-between px-4">
+          {!isCollapsed && (
+            <h2 className="text-lg font-semibold text-center">Base</h2>
+          )}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={() => setIsCollapsed(!isCollapsed)}
+          >
+            {isCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <ChevronLeft className="h-4 w-4" />
+            )}
+          </Button>
         </div>
         <nav className="space-y-1 p-4">
           {navigation.map((item) => {
@@ -109,11 +131,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive
                     ? "bg-primary text-primary-foreground"
-                    : "hover:bg-muted"
+                    : "hover:bg-muted",
+                  isCollapsed && "justify-center"
                 )}
               >
-                <item.icon className="h-4 w-4" />
-                {item.name}
+                <div className="w-4 h-4">
+                  <item.icon className="h-4 w-4" />
+                </div>
+                {!isCollapsed && <span>{item.name}</span>}
               </Link>
             );
           })}
@@ -121,7 +146,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       </div>
 
       {/* Main content */}
-      <div className="lg:pl-64">
+      <div
+        className={cn(
+          "transition-all duration-300",
+          isCollapsed ? "lg:pl-16" : "lg:pl-64"
+        )}
+      >
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-card px-4">
           <div className="hidden lg:block">
             <h1 className="text-lg font-semibold">

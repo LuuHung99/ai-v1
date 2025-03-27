@@ -28,10 +28,10 @@ const ReportSelector = ({
   };
 
   return (
-    <Card className="w-full bg-white shadow-sm">
+    <Card className="w-full bg-card shadow-sm">
       <CardContent className="p-4">
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-foreground">
             Report Selection
           </h2>
           <Tabs
@@ -39,14 +39,14 @@ const ReportSelector = ({
             onValueChange={handleReportChange}
             className="w-full"
           >
-            <TabsList className="grid grid-cols-4 w-full bg-gray-100 p-1 rounded-md">
+            <TabsList className="grid grid-cols-4 w-full bg-muted p-1 rounded-md">
               <TabsTrigger
                 value="daily-sales"
                 className={cn(
                   "py-2 text-sm font-medium transition-all",
                   activeReport === "daily-sales"
                     ? "text-primary"
-                    : "text-gray-600",
+                    : "text-muted-foreground"
                 )}
               >
                 Daily Sales
@@ -57,7 +57,7 @@ const ReportSelector = ({
                   "py-2 text-sm font-medium transition-all",
                   activeReport === "inventory-usage"
                     ? "text-primary"
-                    : "text-gray-600",
+                    : "text-muted-foreground"
                 )}
               >
                 Inventory Usage
@@ -68,7 +68,7 @@ const ReportSelector = ({
                   "py-2 text-sm font-medium transition-all",
                   activeReport === "popular-items"
                     ? "text-primary"
-                    : "text-gray-600",
+                    : "text-muted-foreground"
                 )}
               >
                 Popular Items
@@ -77,7 +77,9 @@ const ReportSelector = ({
                 value="custom"
                 className={cn(
                   "py-2 text-sm font-medium transition-all",
-                  activeReport === "custom" ? "text-primary" : "text-gray-600",
+                  activeReport === "custom"
+                    ? "text-primary"
+                    : "text-muted-foreground"
                 )}
               >
                 Custom Report
@@ -95,7 +97,7 @@ const ReportSelector = ({
           </Tabs>
 
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {activeReport === "daily-sales" &&
                 "View sales data aggregated by day"}
               {activeReport === "inventory-usage" &&
@@ -105,7 +107,7 @@ const ReportSelector = ({
               {activeReport === "custom" &&
                 "Create a custom report with specific parameters"}
             </p>
-            <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">
+            <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 rounded-full">
               {activeReport === "daily-sales" && "Default Report"}
               {activeReport === "inventory-usage" && "Inventory Analysis"}
               {activeReport === "popular-items" && "Sales Analysis"}

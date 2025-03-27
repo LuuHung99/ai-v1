@@ -41,11 +41,14 @@ interface OrderQueueProps {
 }
 
 const statusColors: Record<OrderStatus, string> = {
-  pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
-  preparing: "bg-blue-100 text-blue-800 hover:bg-blue-200",
-  ready: "bg-green-100 text-green-800 hover:bg-green-200",
-  completed: "bg-gray-100 text-gray-800 hover:bg-gray-200",
-  cancelled: "bg-red-100 text-red-800 hover:bg-red-200",
+  pending:
+    "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400 hover:bg-yellow-200 dark:hover:bg-yellow-900/50",
+  preparing:
+    "bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900/50",
+  ready:
+    "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50",
+  completed: "bg-muted text-muted-foreground hover:bg-muted/80",
+  cancelled: "bg-destructive/10 text-destructive hover:bg-destructive/20",
 };
 
 const statusIcons: Record<OrderStatus, React.ReactNode> = {

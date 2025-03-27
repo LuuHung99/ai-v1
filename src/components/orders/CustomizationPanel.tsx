@@ -6,6 +6,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
+interface DrinkOption {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  description: string;
+}
+
+interface Customization {
+  sugarLevel: string;
+  iceLevel: string;
+  toppings: string[];
+}
+
 interface Topping {
   id: string;
   name: string;
@@ -14,17 +28,15 @@ interface Topping {
 }
 
 interface CustomizationPanelProps {
-  drinkId?: string;
-  onCustomizationChange?: (customizations: {
-    sugarLevel: number;
-    iceLevel: number;
-    toppings: string[];
-  }) => void;
+  drink: DrinkOption;
+  customization: Customization;
+  onChange: (customization: Customization) => void;
 }
 
 const CustomizationPanel = ({
-  drinkId = "default-drink",
-  onCustomizationChange = () => {},
+  drink,
+  customization,
+  onChange,
 }: CustomizationPanelProps) => {
   const [sugarLevel, setSugarLevel] = useState<number>(50);
   const [iceLevel, setIceLevel] = useState<number>(50);
@@ -66,12 +78,15 @@ const CustomizationPanel = ({
   const updateCustomizations = (
     sugar: number,
     ice: number,
-    toppings: string[]
+    selectedToppingIds: string[]
   ) => {
-    onCustomizationChange({
-      sugarLevel: sugar,
-      iceLevel: ice,
-      toppings,
+    onChange({
+      sugarLevel: getSugarLevelText(sugar),
+      iceLevel: getIceLevelText(ice),
+      toppings: selectedToppingIds.map((id) => {
+        const topping = toppings.find((t) => t.id === id);
+        return topping?.name || id;
+      }),
     });
   };
 
@@ -92,9 +107,9 @@ const CustomizationPanel = ({
   };
 
   return (
-    <Card className="w-full bg-white shadow-md">
+    <Card className="w-full shadow-md bg-card">
       <CardHeader>
-        <CardTitle className="text-xl font-bold text-center">
+        <CardTitle className="text-xl font-bold text-center text-foreground">
           Customize Your Drink
         </CardTitle>
       </CardHeader>
@@ -102,7 +117,10 @@ const CustomizationPanel = ({
         {/* Sugar Level Slider */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <Label htmlFor="sugar-level" className="text-sm font-medium">
+            <Label
+              htmlFor="sugar-level"
+              className="text-sm font-medium text-foreground"
+            >
               Sugar Level
             </Label>
             <Badge variant="outline" className="font-normal">
@@ -118,7 +136,7 @@ const CustomizationPanel = ({
             onValueChange={handleSugarLevelChange}
             className="cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>0%</span>
             <span>25%</span>
             <span>50%</span>
@@ -130,7 +148,10 @@ const CustomizationPanel = ({
         {/* Ice Level Slider */}
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <Label htmlFor="ice-level" className="text-sm font-medium">
+            <Label
+              htmlFor="ice-level"
+              className="text-sm font-medium text-foreground"
+            >
               Ice Level
             </Label>
             <Badge variant="outline" className="font-normal">
@@ -146,7 +167,7 @@ const CustomizationPanel = ({
             onValueChange={handleIceLevelChange}
             className="cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>0%</span>
             <span>25%</span>
             <span>50%</span>
@@ -157,13 +178,15 @@ const CustomizationPanel = ({
 
         {/* Toppings Selection */}
         <div className="space-y-3">
-          <Label className="text-sm font-medium">Toppings</Label>
+          <Label className="text-sm font-medium text-foreground">
+            Toppings
+          </Label>
           <div className="grid grid-cols-2 gap-3">
             {toppings.map((topping) => (
               <div
                 key={topping.id}
                 className={cn(
-                  "flex items-center space-x-2 rounded-md border p-3",
+                  "flex items-center space-x-2 rounded-md border p-3 bg-card",
                   !topping.available && "opacity-50"
                 )}
               >
@@ -180,16 +203,16 @@ const CustomizationPanel = ({
                   <Label
                     htmlFor={`topping-${topping.id}`}
                     className={cn(
-                      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-foreground"
                     )}
                   >
                     {topping.name}
                   </Label>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     +${topping.price.toFixed(2)}
                   </p>
                   {!topping.available && (
-                    <p className="text-xs text-red-500">Out of stock</p>
+                    <p className="text-xs text-destructive">Out of stock</p>
                   )}
                 </div>
               </div>

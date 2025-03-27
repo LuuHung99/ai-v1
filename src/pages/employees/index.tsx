@@ -46,15 +46,15 @@ const EmployeesPage = () => {
   };
 
   return (
-    <DashboardLayout>
+    <>
       <Helmet>
         <title>Employee Management | Base</title>
       </Helmet>
 
-      <div className="flex flex-col gap-6 bg-gray-50 min-h-screen">
+      <div className="flex flex-col gap-6 bg-background min-h-screen p-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               Employee Management
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -160,7 +160,7 @@ const EmployeesPage = () => {
         <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-foreground">
                 {editingEmployee ? "Edit Employee" : "Add New Employee"}
               </DialogTitle>
             </DialogHeader>
@@ -184,7 +184,7 @@ const EmployeesPage = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

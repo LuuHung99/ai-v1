@@ -11,14 +11,16 @@ const NewOrderPage = () => {
   };
 
   return (
-    <DashboardLayout>
+    <>
       <Helmet>
         <title>New Order - Bubble Tea Management System</title>
       </Helmet>
 
-      <div className="container mx-auto py-4">
+      <div className="p-4">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">Create New Order</h1>
+          <h1 className="text-3xl font-bold text-foreground">
+            Create New Order
+          </h1>
           <p className="text-muted-foreground">
             Create and customize a new bubble tea order
           </p>
@@ -26,7 +28,7 @@ const NewOrderPage = () => {
 
         <OrderForm onOrderComplete={handleOrderComplete} />
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

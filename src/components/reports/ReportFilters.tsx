@@ -81,9 +81,9 @@ const ReportFilters = ({
   };
 
   return (
-    <Card className={cn("p-4 bg-white", className)}>
+    <Card className={cn("p-4 bg-card", className)}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-medium">Report Filters</h3>
+        <h3 className="text-lg font-medium text-foreground">Report Filters</h3>
         <Button variant="outline" size="sm" onClick={handleReset}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Reset Filters
@@ -92,14 +92,18 @@ const ReportFilters = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="date-range">Date Range</Label>
+          <Label htmlFor="date-range" className="text-foreground">
+            Date Range
+          </Label>
           <div className="flex-1">
-            <DatePickerWithRange date={date} setDate={handleDateRangeChange} />
+            <DatePickerWithRange />
           </div>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="product-category">Product Category</Label>
+          <Label htmlFor="product-category" className="text-foreground">
+            Product Category
+          </Label>
           <Select
             value={filters.productCategory}
             onValueChange={(value) =>
@@ -120,7 +124,9 @@ const ReportFilters = ({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="employee-id">Employee</Label>
+          <Label htmlFor="employee-id" className="text-foreground">
+            Employee
+          </Label>
           <Select
             value={filters.employeeId}
             onValueChange={(value) => handleFilterChange("employeeId", value)}
@@ -138,7 +144,7 @@ const ReportFilters = ({
         </div>
 
         <div className="space-y-2 md:col-span-2 lg:col-span-1">
-          <Label>Sales Range</Label>
+          <Label className="text-foreground">Sales Range</Label>
           <div className="flex space-x-2">
             <div className="flex-1">
               <Input

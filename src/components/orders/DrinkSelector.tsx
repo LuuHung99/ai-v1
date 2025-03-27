@@ -86,7 +86,7 @@ const DrinkSelector = ({
       acc[drink.category].push(drink);
       return acc;
     },
-    {},
+    {}
   );
 
   // Format category name for display
@@ -98,12 +98,14 @@ const DrinkSelector = ({
   };
 
   return (
-    <div className="w-full bg-white p-6 rounded-lg shadow-sm">
-      <h2 className="text-2xl font-bold mb-6 text-center">Select Your Drink</h2>
+    <div className="w-full bg-card p-6 rounded-lg shadow-sm">
+      <h2 className="text-2xl font-bold mb-6 text-center text-foreground">
+        Select Your Drink
+      </h2>
 
       {Object.entries(drinksByCategory).map(([category, categoryDrinks]) => (
         <div key={category} className="mb-8">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800">
+          <h3 className="text-xl font-semibold mb-4 text-foreground">
             {formatCategoryName(category)}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -111,8 +113,8 @@ const DrinkSelector = ({
               <Card
                 key={drink.id}
                 className={cn(
-                  "cursor-pointer transition-all hover:shadow-md",
-                  selectedDrinkId === drink.id ? "ring-2 ring-primary" : "",
+                  "cursor-pointer transition-all hover:shadow-md bg-card",
+                  selectedDrinkId === drink.id ? "ring-2 ring-primary" : ""
                 )}
                 onClick={() => onSelect(drink)}
               >
@@ -125,12 +127,16 @@ const DrinkSelector = ({
                 </div>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-medium text-lg">{drink.name}</h4>
+                    <h4 className="font-medium text-lg text-foreground">
+                      {drink.name}
+                    </h4>
                     <span className="font-semibold text-primary">
                       ${drink.price.toFixed(2)}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500">{drink.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {drink.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}

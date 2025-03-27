@@ -83,7 +83,7 @@ const EmployeeForm = ({
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white">
+    <Card className="w-full max-w-2xl mx-auto bg-card">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
           {isEditing ? "Edit Employee" : "Add New Employee"}
@@ -93,7 +93,7 @@ const EmployeeForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
+            className="space-y-6 "
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField

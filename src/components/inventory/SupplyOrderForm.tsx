@@ -121,19 +121,19 @@ const SupplyOrderForm = ({
   ];
 
   return (
-    <Card className="w-full max-w-lg bg-white shadow-md">
-      <CardHeader className="bg-slate-50 border-b">
-        <CardTitle className="text-xl font-semibold text-slate-800">
+    <Card className="w-full max-w-lg shadow-md bg-card">
+      <CardHeader className="border-b bg-muted">
+        <CardTitle className="text-xl font-semibold text-foreground">
           Create Supply Order
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           Order new supplies for low stock inventory items
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="itemName" className="font-medium">
+            <Label htmlFor="itemName" className="font-medium text-foreground">
               Item Name
             </Label>
             <Select
@@ -146,7 +146,7 @@ const SupplyOrderForm = ({
             >
               <SelectTrigger
                 id="itemName"
-                className={cn(errors.itemName && "border-red-500")}
+                className={cn(errors.itemName && "border-destructive")}
               >
                 <SelectValue placeholder="Select an item" />
               </SelectTrigger>
@@ -154,13 +154,13 @@ const SupplyOrderForm = ({
                 {inventoryItems.map((item) => (
                   <SelectItem key={item.id} value={item.id}>
                     <div className="flex justify-between items-center w-full">
-                      <span>{item.name}</span>
+                      <span className="text-foreground">{item.name}</span>
                       <span
                         className={cn(
                           "ml-2 px-2 py-0.5 text-xs rounded-full",
                           item.currentStock <= 5
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800",
+                            ? "bg-destructive/10 text-destructive"
+                            : "bg-yellow-500/10 text-yellow-500"
                         )}
                       >
                         {item.currentStock} left
@@ -176,7 +176,7 @@ const SupplyOrderForm = ({
               value={selectedItem}
             />
             {errors.itemName && (
-              <p className="text-sm text-red-500 flex items-center mt-1">
+              <p className="text-sm text-destructive flex items-center mt-1">
                 <AlertCircle className="h-4 w-4 mr-1" />
                 {errors.itemName.message}
               </p>
@@ -184,20 +184,20 @@ const SupplyOrderForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="supplier" className="font-medium">
+            <Label htmlFor="supplier" className="font-medium text-foreground">
               Supplier
             </Label>
             <Select
               onValueChange={(value) => {
                 const supplierField = document.querySelector(
-                  'input[name="supplier"]',
+                  'input[name="supplier"]'
                 ) as HTMLInputElement;
                 if (supplierField) supplierField.value = value;
               }}
             >
               <SelectTrigger
                 id="supplier"
-                className={cn(errors.supplier && "border-red-500")}
+                className={cn(errors.supplier && "border-destructive")}
               >
                 <SelectValue placeholder="Select a supplier" />
               </SelectTrigger>
@@ -211,7 +211,7 @@ const SupplyOrderForm = ({
             </Select>
             <input type="hidden" {...register("supplier")} />
             {errors.supplier && (
-              <p className="text-sm text-red-500 flex items-center mt-1">
+              <p className="text-sm text-destructive flex items-center mt-1">
                 <AlertCircle className="h-4 w-4 mr-1" />
                 {errors.supplier.message}
               </p>
@@ -219,7 +219,7 @@ const SupplyOrderForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="quantity" className="font-medium">
+            <Label htmlFor="quantity" className="font-medium text-foreground">
               Quantity
             </Label>
             <Input
@@ -227,11 +227,11 @@ const SupplyOrderForm = ({
               type="number"
               min="1"
               placeholder="Enter quantity"
-              className={cn(errors.quantity && "border-red-500")}
+              className={cn(errors.quantity && "border-destructive")}
               {...register("quantity")}
             />
             {errors.quantity && (
-              <p className="text-sm text-red-500 flex items-center mt-1">
+              <p className="text-sm text-destructive flex items-center mt-1">
                 <AlertCircle className="h-4 w-4 mr-1" />
                 {errors.quantity.message}
               </p>
@@ -239,13 +239,13 @@ const SupplyOrderForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="urgency" className="font-medium">
+            <Label htmlFor="urgency" className="font-medium text-foreground">
               Urgency Level
             </Label>
             <Select
               onValueChange={(value) => {
                 const urgencyField = document.querySelector(
-                  'input[name="urgency"]',
+                  'input[name="urgency"]'
                 ) as HTMLInputElement;
                 if (urgencyField) urgencyField.value = value;
               }}
@@ -253,7 +253,7 @@ const SupplyOrderForm = ({
             >
               <SelectTrigger
                 id="urgency"
-                className={cn(errors.urgency && "border-red-500")}
+                className={cn(errors.urgency && "border-destructive")}
               >
                 <SelectValue placeholder="Select urgency level" />
               </SelectTrigger>
@@ -261,25 +261,31 @@ const SupplyOrderForm = ({
                 <SelectItem value="low">
                   <div className="flex items-center">
                     <span className="h-2 w-2 rounded-full bg-green-500 mr-2"></span>
-                    Low - Within 2 weeks
+                    <span className="text-foreground">
+                      Low - Within 2 weeks
+                    </span>
                   </div>
                 </SelectItem>
                 <SelectItem value="normal">
                   <div className="flex items-center">
                     <span className="h-2 w-2 rounded-full bg-yellow-500 mr-2"></span>
-                    Normal - Within 1 week
+                    <span className="text-foreground">
+                      Normal - Within 1 week
+                    </span>
                   </div>
                 </SelectItem>
                 <SelectItem value="high">
                   <div className="flex items-center">
                     <span className="h-2 w-2 rounded-full bg-orange-500 mr-2"></span>
-                    High - Within 3 days
+                    <span className="text-foreground">
+                      High - Within 3 days
+                    </span>
                   </div>
                 </SelectItem>
                 <SelectItem value="critical">
                   <div className="flex items-center">
-                    <span className="h-2 w-2 rounded-full bg-red-500 mr-2"></span>
-                    Critical - ASAP
+                    <span className="h-2 w-2 rounded-full bg-destructive mr-2"></span>
+                    <span className="text-foreground">Critical - ASAP</span>
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -290,7 +296,7 @@ const SupplyOrderForm = ({
               defaultValue="normal"
             />
             {errors.urgency && (
-              <p className="text-sm text-red-500 flex items-center mt-1">
+              <p className="text-sm text-destructive flex items-center mt-1">
                 <AlertCircle className="h-4 w-4 mr-1" />
                 {errors.urgency.message}
               </p>
@@ -298,7 +304,7 @@ const SupplyOrderForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes" className="font-medium">
+            <Label htmlFor="notes" className="font-medium text-foreground">
               Additional Notes
             </Label>
             <Textarea

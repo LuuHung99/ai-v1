@@ -66,9 +66,11 @@ const OrderSummary = ({
   isProcessing = false,
 }: OrderSummaryProps) => {
   return (
-    <Card className="w-full max-w-[350px] h-full bg-white shadow-md">
+    <Card className="w-full max-w-[350px] h-full shadow-md bg-card">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-bold">Order Summary</CardTitle>
+        <CardTitle className="text-xl font-bold text-foreground">
+          Order Summary
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -77,11 +79,13 @@ const OrderSummary = ({
           {items.map((item) => (
             <div key={item.id} className="space-y-2">
               <div className="flex justify-between">
-                <span className="font-medium">{item.name}</span>
-                <span>${(item.price || 0).toFixed(2)}</span>
+                <span className="font-medium text-foreground">{item.name}</span>
+                <span className="text-foreground">
+                  ${(item.price || 0).toFixed(2)}
+                </span>
               </div>
 
-              <div className="text-sm text-gray-500 pl-2 space-y-1">
+              <div className="text-sm text-muted-foreground pl-2 space-y-1">
                 {item.customizations && (
                   <>
                     <div className="flex justify-between">
@@ -102,7 +106,7 @@ const OrderSummary = ({
                                 <span>{topping.name}</span>
                                 <span>+${(topping.price || 0).toFixed(2)}</span>
                               </div>
-                            ),
+                            )
                           )}
                         </div>
                       )}
@@ -117,16 +121,16 @@ const OrderSummary = ({
 
         {/* Price Summary */}
         <div className="space-y-2 pt-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>Tax</span>
             <span>${tax.toFixed(2)}</span>
           </div>
           <Separator className="my-2" />
-          <div className="flex justify-between font-bold">
+          <div className="flex justify-between font-bold text-foreground">
             <span>Total</span>
             <span>${total.toFixed(2)}</span>
           </div>
@@ -137,7 +141,7 @@ const OrderSummary = ({
         <Button
           className={cn(
             "w-full",
-            isProcessing && "opacity-70 cursor-not-allowed",
+            isProcessing && "opacity-70 cursor-not-allowed"
           )}
           onClick={onCheckout}
           disabled={isProcessing}

@@ -7,24 +7,27 @@ import { ThemeProvider } from "./components/providers/ThemeProvider";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./components/auth/PublicRoute";
-import "./styles/colors.css";
-import "./styles/globals.css";
 
 // Import các components chính
-import NewOrder from "./components/orders/NewOrder";
-import Reports from "./components/reports/Reports";
-import Settings from "./components/management/Settings";
+import Reports from "./pages/reports";
+import NewOrderPage from "./pages/orders/new";
+import InventoryPage from "./pages/inventory";
+import EmployeesPage from "./pages/employees";
 import Profile from "./components/management/Profile";
-import InventoryTable from "./components/inventory/InventoryTable";
-import OrderQueue from "./components/orders/OrderQueue";
-import EmployeeTable from "./components/employees/EmployeeTable";
+import Settings from "./components/management/Settings";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="app-theme">
       <AuthProvider>
-        <div className="min-h-screen bg-background text-foreground">
-          <Suspense fallback={<p>Loading...</p>}>
+        <div className="min-h-screen bg-background text-foreground antialiased">
+          <Suspense
+            fallback={
+              <div className="flex h-screen w-full items-center justify-center bg-background text-foreground">
+                <p>Loading...</p>
+              </div>
+            }
+          >
             <Routes>
               {/* Public Routes */}
               <Route element={<PublicRoute />}>
@@ -49,14 +52,13 @@ function App() {
                   />
 
                   {/* Orders */}
-                  <Route path="/orders" element={<OrderQueue />} />
-                  <Route path="/orders/new" element={<NewOrder />} />
+                  <Route path="/orders" element={<NewOrderPage />} />
 
                   {/* Inventory */}
-                  <Route path="/inventory" element={<InventoryTable />} />
+                  <Route path="/inventory" element={<InventoryPage />} />
 
                   {/* Employees (Manager only) */}
-                  <Route path="/employees" element={<EmployeeTable />} />
+                  <Route path="/employees" element={<EmployeesPage />} />
 
                   {/* Reports (Manager only) */}
                   <Route path="/reports" element={<Reports />} />
